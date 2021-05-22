@@ -4,8 +4,13 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 
 # Importation des modules pour resolutions des plaintes d'internet
-import xml.etree.cElementTree as ET
+# import xml.etree.cElementTree as ET
+
+# importation du module qui fera l'extraction du xml depuis la HLR
 from HLR.soap_module import Soap_class
+
+# importation du module qui fera le tri de donnees du xml pour l'ajouter dans le dataset
+import HLR.dataset_enrichment as read_xml
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "my secret key"
@@ -20,13 +25,35 @@ class Msisdn_form_class(FlaskForm):
 @app.route('/', methods=['GET', 'POST'])
 def internet_complaints():
     msisdn = None
+    msisdn_parameters = None
     msisdnForm = Msisdn_form_class()
     msisdn_info_results = {}
-    imsi = None
-    odboc = None
-    odbic = None
-    odbr = None
-    odboprc = None
+
+    # Parametre du xml issu de la HLR
+    # imsi = None
+    # encKey = None
+    # algoId = None
+    # kdbId = None
+    # acsub = None
+    # imsiActive = None
+    # accTypeGSM = None
+    # accTypeGERAN = None
+    # accTypeUTRAN = None
+    # odboc = None
+    # odbic = None
+    # odbr = None
+    # odboprc = None
+    # odbssm = None
+    # odbgprs = None
+    # odbsci = None
+    # isActiveIMSI = None
+    # msisdn = None
+    # actIMSIGprs = None
+    # obGprs = None
+    # qosProfile = None
+    # refPdpContextName = None
+    # imeisv = None
+    # ldapResponse = None
 
     # Validation du formulaire
     if msisdnForm.validate_on_submit():
@@ -37,42 +64,19 @@ def internet_complaints():
         msisdn = Soap_class(msisdn=msisdn)
         soap_xml_filename = msisdn.main()
 
-        # Extraction du contenu du fichier xml
-        tree = ET.ElementTree(file=soap_xml_filename)
-        root = tree.getroot()
-        for books in root.findall('.//'):
-
-            for attr in books:
-                if (attr.tag == 'imsi'):
-                    msisdn_info_results[attr.tag] = attr.text
-                    imsi = attr.text
-
-                if (attr.tag == 'msisdnUsedForAlertingOfSMSServiceCentre'):
-                    msisdn_info_results[attr.tag] = attr.text
-                    msisdn = attr.text
-
-                if (attr.tag == 'odboc'):
-                    odboc = attr.text
-
-                if (attr.tag == 'odbic'):
-                    odbic = attr.text
-
-                if (attr.tag == 'odbr'):
-                    odbr = attr.text
-
-                if (attr.tag == 'odboprc'):
-                    odboprc = attr.text
-        # print(msisdn_info_results)
+        # Enrichissement du dataset avec des inforamtions de l'abonne dans la HLR
+        read_xml.put_data_in_dataset(soap_xml_filename, msisdn_info_results)
 
     return render_template("complaints_internet/index.html",
-                           # msisdn = msisdn_info_results,
-                           imsi = imsi,
+                           # msisdn = msisdn_info_results['imsi'],
+                           imsi = msisdn_info_results,
                            msisdn = msisdn,
-                           odboc= odboc,
-                           odbic = odbic,
-                           odbr = odbr,
-                           odboprc = odboprc,
+                           # odboc= odboc,
+                           # odbic = odbic,
+                           # odbr = odbr,
+                           # odboprc = odboprc,
                            msisdnForm = msisdnForm)
+
 #---------------------------------------------- Plaintes d'appels ------------------------------------------------------------
 @app.route('/calls_complaints')
 def calls_complaints():

@@ -2,7 +2,6 @@
 {##}
 {#{% block content %}#}
 {#    <form class="" method="post">#}
-{#    {% csrf_token %}#}
 {#    <div class="container">#}
 {#        <div class="row">#}
 {#                <div class="form-group col-12">#}
@@ -39,7 +38,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <h1>The phone number which needs assistance is : {{ msisdn }}</h1>
+                <h1>The phone number which needs assistance is : {{ imsi['imsi'] }}</h1>
                 <table class="table">
                   <thead>
                     <tr>
@@ -55,16 +54,16 @@
 {#                        <th scope="row"></th>#}
                         <td>{{ msisdn }}</td>
                         <td>
-                            {{ odboc }}
+<!--                            {{ odboc }}-->
                         </td>
                         <td>
-                            {{ odbic }}
+<!--                            {{ odbic }}-->
                         </td>
                         <td>
-                            {{ odbr }}
+<!--                            {{ odbr }}-->
                         </td>
                         <td>
-                            {{ odboprc }}
+<!--                            {{ odboprc }}-->
                         </td>
                     </tr>
                   </tbody>
