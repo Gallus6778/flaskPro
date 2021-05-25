@@ -3,7 +3,7 @@ import sys
 import string
 
 # from replace_msisdn import Replace_xml_val_class  #from running this module as a script
-from HLR.replace_msisdn import Replace_msisdn_in_xml_class
+from Complaints_internet.replace_msisdn import Replace_msisdn_in_xml_class
 
 #------------------------------------------------------------------------------
 import xml.etree.cElementTree as ET
@@ -27,10 +27,10 @@ class Soap_class:
         with open(payload) as fd:
             r = requests.post(url, data=fd.read().replace("\n",""), headers=headers)
             response = r.content
-            file = open('HLR/soapok.xml', 'w')
+            file = open('Complaints_internet/soapok.xml', 'w')
             file.write(response.decode('utf-8'))
             file.close()
-        return 'HLR/soapok.xml'
+        return 'Complaints_internet/soapok.xml'
 
 if __name__ == "__main__":
     nbr = 237669595858

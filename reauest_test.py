@@ -1,5 +1,5 @@
 import xml.etree.cElementTree as ET
-from HLR.soap_module import Soap_class
+from Complaints_internet.soap_module import Soap_class
 
 msisdn = Soap_class(msisdn='237669595858')
 soap_xml_filename = msisdn.main()

@@ -6,11 +6,15 @@ from wtforms.validators import DataRequired
 # Importation des modules pour resolutions des plaintes d'internet
 # import xml.etree.cElementTree as ET
 
-# importation du module qui fera l'extraction du xml depuis la HLR
-from HLR.soap_module import Soap_class
+# importation du module qui fera l'extraction du xml depuis la HLR pour les Complaints_internet
+from Complaints_internet.soap_module import Soap_class
 
 # importation du module qui fera le tri de donnees du xml pour l'ajouter dans le dataset
-import HLR.dataset_enrichment as read_xml
+import Complaints_internet.dataset_enrichment as read_xml
+
+# importation du module qui fera l'extraction du log depuis la SGSN pour les Complaints_internet
+# import Complaints_internet.sgsn_info_module
+from Complaints_internet import sgsn_info_module
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "my secret key"
@@ -27,9 +31,32 @@ def internet_complaints():
     msisdn = None
     msisdn_parameters = None
     msisdnForm = Msisdn_form_class()
-    msisdn_info_results = {}
+    msisdn_info_results = {'imsi' : 'None',
+                           'encKey' : 'None',
+                           'algoId' : 'None',
+                           'kdbId' : 'None',
+                           'acsub' : 'None',
+                           'imsiActive' : 'None',
+                           'accTypeGSM' : 'None',
+                           'accTypeGERAN' : 'None',
+                           'accTypeUTRAN' : 'None',
+                           'odboc' : 'None',
+                           'odbic' : 'None',
+                           'odbr' : 'None',
+                           'odboprc' : 'None',
+                           'odbssm' : 'None',
+                           'odbgprs' : 'None',
+                           'odbsci' : 'None',
+                           'isActiveIMSI' : 'None',
+                           'msisdn' : 'None',
+                           'actIMSIGprs' : 'None',
+                           'obGprs' : 'None',
+                           'qosProfile' : 'None',
+                           'refPdpContextName' : 'None',
+                           'imeisv' : 'None',
+                           'ldapResponse' : 'None'}
 
-    # Parametre du xml issu de la HLR
+    # Parametre du xml issu de la Complaints_internet
     # imsi = None
     # encKey = None
     # algoId = None
@@ -60,16 +87,29 @@ def internet_complaints():
         msisdn = msisdnForm.msisdn.data
         msisdnForm.msisdn.data = ''
 
-        # Recuperation des inforamtions de l'abonne dans la HLR
+        # Recuperation des inforamtions de l'abonne dans la HLR pour Complaints_internet
         msisdn = Soap_class(msisdn=msisdn)
         soap_xml_filename = msisdn.main()
 
-        # Enrichissement du dataset avec des inforamtions de l'abonne dans la HLR
-        read_xml.put_data_in_dataset(soap_xml_filename, msisdn_info_results)
+        #
+        sgsn_info_module.main(msisdn)
+
+        # Enrichissement du dataset avec des inforamtions de l'abonne dans la Complaints_internet (ce dernier modifiera le contenu du dictionnaire )
+        try:
+            read_xml.put_data_in_dataset(soap_xml_filename, msisdn_info_results)
+        except :
+            messageErreur = 'Error -> file not closed:-) You must first closed the "dataset_internet.xlsx" file !'
+            return messageErreur
+
+        # Recuperation des inforamtions de l'abonne dans la SGSN pour Complaints_internet
+            # zmmi_command = zmmi_zmmo_zmms_class(msisdn)
+            # zmmi_command.main()
+        # sgsn_info_module.main(msisdn)
 
     return render_template("complaints_internet/index.html",
                            # msisdn = msisdn_info_results['imsi'],
-                           imsi = msisdn_info_results,
+                           # imsi = msisdn_info_results,
+                           msisdn_info_results = msisdn_info_results,
                            msisdn = msisdn,
                            # odboc= odboc,
                            # odbic = odbic,
@@ -112,4 +152,4 @@ def others():
 
 # if __name__ == '__main__':
 #     app.config.update(ENV="development", DEBUG=True)
-    # app.run(host='0.0.0.0', port= 8000)
+#     app.run(host='0.0.0.0', port= 8000)

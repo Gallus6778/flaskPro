@@ -29,6 +29,30 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
 
 </head>
+
+<style>
+    .dtHorizontalExampleWrapper {
+        max-width: 600px;
+        margin: 0 auto;
+        overflow: auto;
+        }
+    #dtHorizontalExample th, td {
+        white-space: nowrap;
+        }
+
+    table.dataTable thead .sorting:after,
+    table.dataTable thead .sorting:before,
+    table.dataTable thead .sorting_asc:after,
+    table.dataTable thead .sorting_asc:before,
+    table.dataTable thead .sorting_asc_disabled:after,
+    table.dataTable thead .sorting_asc_disabled:before,
+    table.dataTable thead .sorting_desc:after,
+    table.dataTable thead .sorting_desc:before,
+    table.dataTable thead .sorting_desc_disabled:after,
+    table.dataTable thead .sorting_desc_disabled:before {
+        bottom: .5em;
+        }
+</style>
 <body>
 {% include 'includes/navbar.html' %}
 <hr>
@@ -38,36 +62,91 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <h1>The phone number which needs assistance is : {{ imsi['imsi'] }}</h1>
-                <table class="table">
-                  <thead>
-                    <tr>
-                        <th scope="col">msisdn</th>
-                        <th scope="col">odboc</th>
-                        <th scope="col">odbic</th>
-                        <th scope="col">odbr</th>
-                        <th scope="col">odboprc</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-{#                        <th scope="row"></th>#}
-                        <td>{{ msisdn }}</td>
-                        <td>
-<!--                            {{ odboc }}-->
-                        </td>
-                        <td>
-<!--                            {{ odbic }}-->
-                        </td>
-                        <td>
-<!--                            {{ odbr }}-->
-                        </td>
-                        <td>
-<!--                            {{ odboprc }}-->
-                        </td>
-                    </tr>
-                  </tbody>
-                </table>
+                <center>
+                    <h1>The informations in the HLR of the subscriber: {{ msisdn_info_results['msisdn'] }}</h1>
+
+                        <table id="dtHorizontalExample" class="table table-bordered table-sm" cellspacing="0" width="100%">
+                          <thead>
+                            <tr>
+                              <th scope="col">imsiActive</th>
+                              <th scope="col">accTypeGSM</th>
+                              <th scope="col">accTypeGERAN</th>
+                              <th scope="col">accTypeUTRAN</th>
+                              <th scope="col">odboc</th>
+                              <th scope="col">odbic</th>
+                              <th scope="col">odbr</th>
+                              <th scope="col">odboprc</th>
+                              <th scope="col">odbssm</th>
+                              <th scope="col">odbgprs</th>
+                              <th scope="col">odbsci</th>
+                              <th scope="col">isActiveIMSI</th>
+                              <th scope="col">msisdn</th>
+                              <th scope="col">actIMSIGprs</th>
+                              <th scope="col">obGprs</th>
+                              <th scope="col">qosProfile</th>
+                              <th scope="col">refPdpContextName</th>
+                              <th scope="col">imeisv</th>
+                              <th scope="col">ldapResponse</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>{{ msisdn_info_results['imsiActive'] }}</td>
+                              <td>{{ msisdn_info_results['accTypeGSM'] }}</td>
+                              <td>{{ msisdn_info_results['accTypeGERAN'] }}</td>
+                              <td>{{ msisdn_info_results['accTypeUTRAN'] }}</td>
+                              <td>{{ msisdn_info_results['odboc'] }}</td>
+                              <td>{{ msisdn_info_results['odbic'] }}</td>
+                              <td>{{ msisdn_info_results['odbr'] }}</td>
+                              <td>{{ msisdn_info_results['odboprc'] }}</td>
+                              <td>{{ msisdn_info_results['odbssm'] }}</td>
+                              <td>{{ msisdn_info_results['odbgprs'] }}</td>
+                              <td>{{ msisdn_info_results['odbsci'] }}</td>
+                              <td>{{ msisdn_info_results['isActiveIMSI'] }}</td>
+                              <td>{{ msisdn_info_results['msisdn'] }}</td>
+                              <td>{{ msisdn_info_results['actIMSIGprs'] }}</td>
+                              <td>{{ msisdn_info_results['obGprs'] }}</td>
+                              <td>{{ msisdn_info_results['qosProfile'] }}</td>
+                              <td>{{ msisdn_info_results['refPdpContextName'] }}</td>
+                              <td>{{ msisdn_info_results['imeisv'] }}</td>
+                              <td>{{ msisdn_info_results['ldapResponse'] }}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                    </center>
+<!--                ------------------------------------------------------------                -->
+                <center>
+                    <h1>The informations in the SGSN of the subscriber: {{ msisdn_info_results['msisdn'] }}</h1>
+                    <table class="table">
+                      <thead>
+                        <tr>
+                            <th scope="col">msisdn</th>
+                            <th scope="col">odboc</th>
+                            <th scope="col">odbic</th>
+                            <th scope="col">odbr</th>
+                            <th scope="col">odboprc</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+    {#                        <th scope="row"></th>#}
+                            <td>{{ msisdn }}</td>
+                            <td>
+    <!--                            {{ odboc }}-->
+                            </td>
+                            <td>
+    <!--                            {{ odbic }}-->
+                            </td>
+                            <td>
+    <!--                            {{ odbr }}-->
+                            </td>
+                            <td>
+    <!--                            {{ odboprc }}-->
+                            </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                </center>
             </div>
         </div>
     </div>
@@ -93,5 +172,12 @@
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function () {
+        $('#dtHorizontalExample').DataTable({
+        "scrollX": true});
+        $('.dataTables_length').addClass('bs-select');
+        });
+</script>
 </body>
 </html>

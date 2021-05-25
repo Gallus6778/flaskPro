@@ -147,25 +147,25 @@ def put_data_in_dataset(filename, msisdn_info_results):
     #     row = 2
     #     sheet.cell(row=row, column=column, value=values)
     #     column += 1
-    # workbook.save(filename='HLR/dataset_internet.xlsx')
+    # workbook.save(filename='Complaints_internet/dataset_internet.xlsx')
     # -----------------------------------------------------------------------------
     # ----------------- Ajout des donnees a la fin du fichier excel----------------
     
-    try:
-        filename='HLR/dataset_internet.xlsx'
-        wb = openpyxl.load_workbook(filename=filename)
+    # try:
+    filename='Complaints_internet/dataset_internet.xlsx'
+    wb = openpyxl.load_workbook(filename=filename)
 
-        sheet = wb.active
-        new_row = []
+    sheet = wb.active
+    new_row = []
 
-        for key,values in msisdn_info_results.items():
-            new_row.append(values)
+    for key,values in msisdn_info_results.items():
+        new_row.append(values)
 
-        sheet.append(new_row)
-        wb.save(filename)
-    except :
-        messageErreur = 'Error -> file not closed:-) You must first closed the "dataset_internet.xlsx" file !'
-        return messageErreur
+    sheet.append(new_row)
+    wb.save(filename)
+    # except :
+    #     messageErreur = 'Error -> file not closed:-) You must first closed the "dataset_internet.xlsx" file !'
+    #     return messageErreur
     
     # return msisdn_info_results
     # return imsi,encKey,algoId,kdbId,acsub,imsiActive,accTypeGSM,accTypeGERAN,accTypeUTRAN,odboc,odbic,odbr,odboprc,odbssm,odbgprs,odbsci,isActiveIMSI,msisdn,actIMSIGprs,obGprs,qosProfile,refPdpContextName,imeisv,ldapResponse

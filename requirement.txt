@@ -6,3 +6,5 @@ pandas
 xlsxwriter
 xlrd
 openpyxl
+telnetlib3
+asyncio
