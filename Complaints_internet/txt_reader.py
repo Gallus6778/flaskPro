@@ -19,6 +19,7 @@ class txt_reader_class:
                                                 'TERMINAL TYPE': 'none',
                                                 'LAC': 'none',
                                                 'CI': 'none',
+                                                 'SUBSCRIBER' : 'exists',
                                                 # 'ID1': {'PDP CONTEXT ID': 'none', 'APN': 'none',
                                                 #         'QOS PROFILE VERSION': 'none'},
                                                 # 'ID2': {'PDP CONTEXT ID': 'none', 'APN': 'none',
@@ -38,51 +39,52 @@ class txt_reader_class:
                 if not line:
                     break
                 if 'UNKNOWN SUBSCRIBER' in line:
-                    print('ERROR: UNKNOWN SUBSCRIBER')
+                    # print('ERROR: UNKNOWN SUBSCRIBER')
+                    self.subscriber_state_information['IMSI'] = 'UNKNOWN SUBSCRIBER'
                     break
 
                 if 'INTERNATIONAL MOBILE SUBSCRIBER IDENTITY' in line and count == 1:
                     count += 1
                     # print(len(line))
                     self.subscriber_state_information['IMSI'] = line[56:]
-                    print(self.subscriber_state_information['IMSI'])
+                    # print(self.subscriber_state_information['IMSI'])
                     continue
 
                 if 'MOBILE SUBSCRIBER INTERNATIONAL ISDN NUMBER' in line and count == 2:
                     count += 1
                     # print(len(line))
                     self.subscriber_state_information['MSISDN'] = line[56:]
-                    print(self.subscriber_state_information['MSISDN'])
+                    # print(self.subscriber_state_information['MSISDN'])
                     continue
 
                 if 'RADIO ACCESS TYPE' in line and count == 3:
                     count += 1
                     # print(len(line))
                     self.subscriber_state_information['RADIO ACCESS TYPE'] = line[56:]
-                    print(self.subscriber_state_information['RADIO ACCESS TYPE'])
+                    # print(self.subscriber_state_information['RADIO ACCESS TYPE'])
                     continue
 
                 if 'PDP STATE' in line:
                     # print(len(line))
                     self.subscriber_state_information['PDP STATE'] = line[56:]
-                    print(self.subscriber_state_information['PDP STATE'])
+                    # print(self.subscriber_state_information['PDP STATE'])
                     continue
 
                 if 'TERMINAL TYPE' in line:
                     # print(len(line))
                     self.subscriber_state_information['TERMINAL TYPE'] = line[56:]
-                    print(self.subscriber_state_information['TERMINAL TYPE'])
+                    # print(self.subscriber_state_information['TERMINAL TYPE'])
                     continue
 
                 if 'LOCATION AREA CODE' in line:
                     # print(len(line))
                     self.subscriber_state_information['LAC'] = line[56:]
-                    print(self.subscriber_state_information['LAC'])
+                    # print(self.subscriber_state_information['LAC'])
                     continue
                 if 'CELL IDENTITY' in line:
                     # print(len(line))
                     self.subscriber_state_information['CI'] = line[56:]
-                    print(self.subscriber_state_information['CI'])
+                    # print(self.subscriber_state_information['CI'])
                     continue
                 # if 'PDP CONTEXT ID' in line:
                 #     print(len(line))
@@ -160,6 +162,9 @@ class txt_reader_class:
 
         worksheet1.write('G1', 'CI')
         worksheet1.write('G2', self.subscriber_state_information['CI'])
+
+        worksheet1.write('H1', 'SUBSCRIBER')
+        worksheet1.write('H2', self.subscriber_state_information['SUBSCRIBER'])  # UNKNOWN SUBSCRIBER
 
         # worksheet1.write('I1', 'PDP CONTEXT ID')
         # worksheet1.write('I2', self.subscriber_state_information['ID1']['PDP CONTEXT ID'])

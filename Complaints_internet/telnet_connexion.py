@@ -35,7 +35,7 @@ class zmmi_zmmo_zmms_class:
         while True:
             outp = yield from reader.read(65536)
             if outp == "":
-                print('enter')
+                # print('enter')
                 # End of File
                 break
             elif 'ENTER USERNAME' in outp:
@@ -49,11 +49,11 @@ class zmmi_zmmo_zmms_class:
             f1.write(outp)
             f1.close()
             if "COMMAND" in outp:
-                print(inc)
+                # print(inc)
                 inc += 1
-                print(outp)
+                # print(outp)
                 if inc == 3:
-                    print('End exe')
+                    # print('End exe')
                     break
                 else:
                     continue
@@ -76,7 +76,7 @@ class zmmi_zmmo_zmms_class:
 
         coro = telnetlib3.open_connection(self.server_ip, 23, shell=self.shell)
         reader, writer = loop.run_until_complete(coro)
-        print('debut-fin')
+        # print('debut-fin')
 
         loop.run_until_complete(writer.protocol.waiter_closed)
         file_name = self.file_name

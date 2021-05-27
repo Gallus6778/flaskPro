@@ -2,6 +2,7 @@ from flask import Flask, render_template
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
+import threading
 
 # Importation des modules pour resolutions des plaintes d'internet
 # import xml.etree.cElementTree as ET
@@ -13,7 +14,6 @@ from Complaints_internet.soap_module import Soap_class
 import Complaints_internet.dataset_enrichment as read_xml
 
 # importation du module qui fera l'extraction du log depuis la SGSN pour les Complaints_internet
-# import Complaints_internet.sgsn_info_module
 from Complaints_internet import sgsn_info_module
 
 app = Flask(__name__)
@@ -24,6 +24,12 @@ app.config['SECRET_KEY'] = "my secret key"
 class Msisdn_form_class(FlaskForm):
     msisdn = StringField("Enter the msisdn : ")
     submit = SubmitField("Submit")
+
+# soap_xml_filename = 'None'
+# def soap_thread(msisdn_form):
+#     msisdn = Soap_class(msisdn=msisdn_form)
+#     soap_xml_filename = msisdn.main()
+#     return soap_xml_filename
 
 @app.route('/internet_complaints', methods=['GET', 'POST'])
 @app.route('/', methods=['GET', 'POST'])
@@ -56,46 +62,23 @@ def internet_complaints():
                            'imeisv' : 'None',
                            'ldapResponse' : 'None'}
 
-    # Parametre du xml issu de la Complaints_internet
-    # imsi = None
-    # encKey = None
-    # algoId = None
-    # kdbId = None
-    # acsub = None
-    # imsiActive = None
-    # accTypeGSM = None
-    # accTypeGERAN = None
-    # accTypeUTRAN = None
-    # odboc = None
-    # odbic = None
-    # odbr = None
-    # odboprc = None
-    # odbssm = None
-    # odbgprs = None
-    # odbsci = None
-    # isActiveIMSI = None
-    # msisdn = None
-    # actIMSIGprs = None
-    # obGprs = None
-    # qosProfile = None
-    # refPdpContextName = None
-    # imeisv = None
-    # ldapResponse = None
-
     # Validation du formulaire
     if msisdnForm.validate_on_submit():
-        msisdn = msisdnForm.msisdn.data
+        msisdn_form = msisdnForm.msisdn.data
         msisdnForm.msisdn.data = ''
 
         # Recuperation des inforamtions de l'abonne dans la HLR pour Complaints_internet
-        msisdn = Soap_class(msisdn=msisdn)
+        # Thread 1
+        # th1 = threading.Thread(target=soap_thread(msisdn_form))
+        msisdn = Soap_class(msisdn=msisdn_form)
         soap_xml_filename = msisdn.main()
 
         #
-        sgsn_info_module.main(msisdn)
+        # sgsn_info_module.main(msisdn_form)
 
         # Enrichissement du dataset avec des inforamtions de l'abonne dans la Complaints_internet (ce dernier modifiera le contenu du dictionnaire )
         try:
+            # read_xml.put_data_in_dataset(soap_thread(msisdn_form), msisdn_info_results)
             read_xml.put_data_in_dataset(soap_xml_filename, msisdn_info_results)
         except :
             messageErreur = 'Error -> file not closed:-) You must first closed the "dataset_internet.xlsx" file !'
@@ -104,7 +87,7 @@ def internet_complaints():
         # Recuperation des inforamtions de l'abonne dans la SGSN pour Complaints_internet
             # zmmi_command = zmmi_zmmo_zmms_class(msisdn)
             # zmmi_command.main()
-        # sgsn_info_module.main(msisdn)
+        # th2 = threading.Thread(target=sgsn_info_module.main(msisdn_form))
 
     return render_template("complaints_internet/index.html",
                            # msisdn = msisdn_info_results['imsi'],
@@ -153,3 +136,31 @@ def others():
 # if __name__ == '__main__':
 #     app.config.update(ENV="development", DEBUG=True)
 #     app.run(host='0.0.0.0', port= 8000)
+
+
+
+# Parametre du xml issu de la Complaints_internet
+    # imsi = None
+    # encKey = None
+    # algoId = None
+    # kdbId = None
+    # acsub = None
+    # imsiActive = None
+    # accTypeGSM = None
+    # accTypeGERAN = None
+    # accTypeUTRAN = None
+    # odboc = None
+    # odbic = None
+    # odbr = None
+    # odboprc = None
+    # odbssm = None
+    # odbgprs = None
+    # odbsci = None
+    # isActiveIMSI = None
+    # msisdn = None
+    # actIMSIGprs = None
+    # obGprs = None
+    # qosProfile = None
+    # refPdpContextName = None
+    # imeisv = None
+    # ldapResponse = None

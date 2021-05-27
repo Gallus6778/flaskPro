@@ -1,0 +1,82 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ENTER USERNAME <  CHATBO
+
+ENTER PASSWORD <  **********
+
+/*** YOUR PASSWORD EXPIRES IN 1 DAY(S) ***/
+
+SGSN      YASG01                    2021-05-26  09:41:50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                       WELCOME TO THE DX 200 SERIES DIALOGUE
+
+
+
+
+
+MAIN LEVEL COMMAND <___>
+<  ZMMI:MSISDN=237667720297:;
+
+
+LOADING PROGRAM VERSION 13.16-0
+
+SGSN      YASG01                    2021-05-26  09:41:50
+
+/*** DX ERROR: 196613 ***/
+/*** UNKNOWN SUBSCRIBER ***/
+
+COMMAND EXECUTED
+
+
+VISITING GPRS SUBSCRIBER DATA HANDLING COMMAND <MM_>
+<  ZMMO:MSISDN=237667720297:;
+
+LOADING PROGRAM VERSION 13.16-0
+
+SGSN      YASG01                    2021-05-26  09:41:50
+
+/*** DX ERROR: 196613 ***/
+/*** UNKNOWN SUBSCRIBER ***/
+
+COMMAND EXECUTION FAILED 
+
+VISITING GPRS SUBSCRIBER DATA HANDLING COMMAND <MM_>
+<  
