@@ -22,21 +22,42 @@ class ClientThread(threading.Thread):
             if msg=='bye':
                 self.csocket.send(message_emis)
                 break
-
+            # ===========================================================
             print ("from client", msg)
             reponse = list(msg.split(","))
+
             message_ack = ''
             if reponse[1] == 'pi':
                 pas_internet = pi(reponse[0])
+                print(reponse)
+                print(reponse[0])
+                print(type(reponse[0]))
                 transcription = pas_internet.main()
 
-                for keys, values in transcription:
-                    message_ack = message_ack + keys + ":" +values +";"
+                for keys, values in transcription.items():
+                    message_ack = message_ack + keys + ":" + values +";"
+            elif reponse[1] == 'li':
+                message_ack = 'lenteur internet a resoudre tres bientot'
+                # pas_internet = pi(reponse[0])
+                # transcription = pas_internet.main()
+                #
+                # for keys, values in transcription:
+                #     message_ack = message_ack + keys + ":" +values +";"
+            elif reponse[1] == 'ae':
+                message_ack = 'appel entrant a resoudre tres bientot'
+            elif reponse[1] == 'as':
+                message_ack = 'appel sortant a resoudre tres bientot'
+            elif reponse[1] == 'sms':
+                message_ack = 'pb sms a resoudre tres bientot'
+            else:
+                message_ack = 'probleme non specifie'
+            # ===========================================================
 
             message_emis = message_ack.encode("utf8")
             self.csocket.send(message_emis)
         print ("Client at ", clientAddress , " disconnected...")
-        
+
+# ==================changer l'adresse ip de la machine dans le reseau=========================================
 LOCALHOST = "192.168.1.5"
 PORT = 12101
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
