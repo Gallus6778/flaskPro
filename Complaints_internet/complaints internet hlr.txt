@@ -1,0 +1,7 @@
+QOS 01 -> REL7'
+
+
+ZEPO : TYPE = SA , LAC=, SAC=, 3G
+ZEPO : TYPE = BTS , LAC=, CI=, 2G
+
+

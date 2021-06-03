@@ -1,41 +1,102 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for, session, escape
+# from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms import StringField, SubmitField, PasswordField, BooleanField
+from wtforms.validators import InputRequired,Email,Length, DataRequired
 import threading
+from flask_mongoengine import MongoEngine
 
 # Importation des modules pour resolutions des plaintes d'internet
 # import xml.etree.cElementTree as ET
 
 # importation du module qui fera l'extraction du xml depuis la HLR pour les Complaints_internet
 from Complaints_internet.soap_module import Soap_class
-
 # importation du module qui fera le tri de donnees du xml pour l'ajouter dans le dataset
 import Complaints_internet.dataset_enrichment as read_xml
-
 # importation du module qui fera l'extraction du log depuis la SGSN pour les Complaints_internet
 from Complaints_internet import sgsn_info_module
+# importation du module qui identifiera et corrigera depuis la SGSN et la HLR les Complaints_internet
+from Complaints_internet.correct_complaints_module import Info_hlr
 
 app = Flask(__name__)
+# Bootstrap(app)
+
+app.config['MONGODB_SETTINGS'] = {
+    "db": "flaskPro",
+}
+db = MongoEngine(app)
 app.config['SECRET_KEY'] = "my secret key"
 
+#---------------------------------------------- login form ------------------------------------------------------------
+class LoginForm(FlaskForm):
+    email = StringField("email")
+    password = SubmitField("password")
+    remember = BooleanField("remember me")
+    submit = SubmitField("Submit")
+#---------------------------------------------- login page's ------------------------------------------------------------
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    # user = LoginForm
+    # return render_template('users/register.html', user = user)
+    if request.method == 'POST':
+        # session['email'] = request.form['email']
+
+        file = open('session.txt', 'w')
+        file.write("email = " + request.form['email'])
+        file.close()
+        return redirect(url_for('index'))
+
+    return render_template('users/register.html')
+
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    user = LoginForm()
+    return render_template('users/signup.html', user = user)
+
+# @app.route('/')
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    # if request.method == 'POST':
+    #     email = request.form['email']
+    #     password = request.form['password']
+    #     return redirect(url_for('dashboard'))
+    # return render_template('users/index.html')
+    try:
+        file = open('sesion.txt', 'r')
+        session = file.readline()
+        file.close()
+        if 'email' in session:
+            email = session
+            return 'Logged in as ' + email + '<br>' + "<b><a href = '/logout'>click here to log out</a></b>"
+    except:
+        return "You are not logged in <br><a href = '/login'>" + "click here to log in</a>"
+
+
+@app.route('/dashboard', methods=['GET', 'POST'])
+def dashboard():
+    return render_template('dashboard.html')
 #---------------------------------------------- Plaintes Internet ------------------------------------------------------------
 
 class Msisdn_form_class(FlaskForm):
     msisdn = StringField("Enter the msisdn : ")
     submit = SubmitField("Submit")
 
-# soap_xml_filename = 'None'
+# soap_xml_filename = 'None'S
 # def soap_thread(msisdn_form):
 #     msisdn = Soap_class(msisdn=msisdn_form)
 #     soap_xml_filename = msisdn.main()
 #     return soap_xml_filename
 
+
+
+
 @app.route('/internet_complaints', methods=['GET', 'POST'])
-@app.route('/', methods=['GET', 'POST'])
+# @app.route('/', methods=['GET', 'POST'])
 def internet_complaints():
+
     msisdn = None
     msisdn_parameters = None
+    info_parameter = None
     msisdnForm = Msisdn_form_class()
     msisdn_info_results = {'imsi' : 'None',
                            'encKey' : 'None',
@@ -89,15 +150,14 @@ def internet_complaints():
             # zmmi_command.main()
         # th2 = threading.Thread(target=sgsn_info_module.main(msisdn_form))
 
+        # ============================= Correction du probleme ===========================
+        subscriber_info = Info_hlr()
+        info_parameter = subscriber_info.main()
+
     return render_template("complaints_internet/index.html",
-                           # msisdn = msisdn_info_results['imsi'],
-                           # imsi = msisdn_info_results,
                            msisdn_info_results = msisdn_info_results,
                            msisdn = msisdn,
-                           # odboc= odboc,
-                           # odbic = odbic,
-                           # odbr = odbr,
-                           # odboprc = odboprc,
+                           msisdn1 = info_parameter,
                            msisdnForm = msisdnForm)
 
 #---------------------------------------------- Plaintes d'appels ------------------------------------------------------------
@@ -109,58 +169,3 @@ def calls_complaints():
 @app.route('/sms_complaints')
 def sms_complaints():
     return 'plaintes sms disponible tres bientot'
-
-# Autres
-@app.route('/others')
-def others():
-    return 'Autres traitements bientot disponible'
-
-# CREATE A FORM CLASS
-# class NameForm(FlaskForm):
-#     name = StringField("What your name", validators=[DataRequired()])
-#     submit = SubmitField("Submit")
-
-# CREATE Name page
-# @app.route('/name', methods=['GET', 'POST'])
-# def name():
-#     name = None
-#     form = NameForm()
-#     validate form
-    # if form.validate_on_submit():
-    #     name = form.name.data
-    #     form.name.data = ''
-    # return render_template("complaints_internet/index.html",
-    #                        name = name,
-    #                        form = form)
-
-# if __name__ == '__main__':
-#     app.config.update(ENV="development", DEBUG=True)
-#     app.run(host='0.0.0.0', port= 8000)
-
-
-
-# Parametre du xml issu de la Complaints_internet
-    # imsi = None
-    # encKey = None
-    # algoId = None
-    # kdbId = None
-    # acsub = None
-    # imsiActive = None
-    # accTypeGSM = None
-    # accTypeGERAN = None
-    # accTypeUTRAN = None
-    # odboc = None
-    # odbic = None
-    # odbr = None
-    # odboprc = None
-    # odbssm = None
-    # odbgprs = None
-    # odbsci = None
-    # isActiveIMSI = None
-    # msisdn = None
-    # actIMSIGprs = None
-    # obGprs = None
-    # qosProfile = None
-    # refPdpContextName = None
-    # imeisv = None
-    # ldapResponse = None

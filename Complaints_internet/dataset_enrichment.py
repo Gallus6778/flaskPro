@@ -33,107 +33,121 @@ def put_data_in_dataset(filename, msisdn_info_results):
     # Extraction du contenu du fichier xml
     tree = ET.ElementTree(file=filename)
     root = tree.getroot()
+    inc = 1
     for books in root.findall('.//'):
 
-        for attr in books:
-            if (attr.tag == 'imsi'):
-                msisdn_info_results[attr.tag] = attr.text
-                imsi = attr.text
-            
-            if (attr.tag == 'encKey'):
-                msisdn_info_results[attr.tag] = attr.text
-                encKey = attr.text
-            
-            if (attr.tag == 'algoId'):
-                msisdn_info_results[attr.tag] = attr.text
-                algoId = attr.text
-            
-            if (attr.tag == 'kdbId'):
-                msisdn_info_results[attr.tag] = attr.text
-                kdbId = attr.text
-            
-            if (attr.tag == 'acsub'):
-                msisdn_info_results[attr.tag] = attr.text
-                acsub = attr.text
-            
-            if (attr.tag == 'imsiActive'):
-                msisdn_info_results[attr.tag] = attr.text
-                imsiActive = attr.text
-            
-            if (attr.tag == 'accTypeGSM'):
-                msisdn_info_results[attr.tag] = attr.text
-                accTypeGSM = attr.text
-            
-            if (attr.tag == 'accTypeGERAN'):
-                msisdn_info_results[attr.tag] = attr.text
-                accTypeGERAN = attr.text
-            
-            if (attr.tag == 'accTypeUTRAN'):
-                msisdn_info_results[attr.tag] = attr.text
-                accTypeUTRAN = attr.text
+        if (books.tag == 'imsi'):
+            msisdn_info_results[books.tag] = books.text
+            imsi = books.text
 
-            if (attr.tag == 'odboc'):
-                msisdn_info_results[attr.tag] = attr.text
-                odboc = attr.text
+        if (books.tag == 'encKey'):
+            msisdn_info_results[books.tag] = books.text
+            encKey = books.text
 
-            if (attr.tag == 'odbic'):
-                msisdn_info_results[attr.tag] = attr.text
-                odbic = attr.text
+        if (books.tag == 'algoId'):
+            msisdn_info_results[books.tag] = books.text
+            algoId = books.text
 
-            if (attr.tag == 'odbr'):
-                msisdn_info_results[attr.tag] = attr.text
-                odbr = attr.text
+        if (books.tag == 'kdbId'):
+            msisdn_info_results[books.tag] = books.text
+            kdbId = books.text
 
-            if (attr.tag == 'odboprc'):
-                msisdn_info_results[attr.tag] = attr.text
-                odboprc = attr.text
+        if (books.tag == 'acsub'):
+            msisdn_info_results[books.tag] = books.text
+            acsub = books.text
 
-            if (attr.tag == 'odbssm'):
-                msisdn_info_results[attr.tag] = attr.text
-                odbssm = attr.text
-            
-            if (attr.tag == 'odbgprs'):
-                msisdn_info_results[attr.tag] = attr.text
-                odbgprs = attr.text
-            
-            if (attr.tag == 'odbsci'):
-                msisdn_info_results[attr.tag] = attr.text
-                odbsci = attr.text
+        if (books.tag == 'imsiActive'):
+            msisdn_info_results[books.tag] = books.text
+            imsiActive = books.text
 
-            if (attr.tag == 'msisdn'):
-                msisdn_info_results[attr.tag] = attr.text
-                msisdn = attr.text
+        if (books.tag == 'accTypeGSM'):
+            msisdn_info_results[books.tag] = books.text
+            accTypeGSM = books.text
 
-            if (attr.tag == 'isActiveIMSI'):
-                msisdn_info_results[attr.tag] = attr.text
-                isActiveIMSI = attr.text
-                
-            if (attr.tag == 'actIMSIGprs'):
-                msisdn_info_results[attr.tag] = attr.text
-                actIMSIGprs = attr.text
-            
-            if (attr.tag == 'obGprs'):
-                msisdn_info_results[attr.tag] = attr.text
-                obGprs = attr.text
-            
-            if (attr.tag == 'qosProfile'):
-                msisdn_info_results[attr.tag] = attr.text
-                qosProfile = attr.text
-            
-            if (attr.tag == 'refPdpContextName'):
-                msisdn_info_results[attr.tag] = attr.text
-                refPdpContextName = attr.text
-            
-            if (attr.tag == 'imeisv'):
-                msisdn_info_results[attr.tag] = attr.text
-                imeisv = attr.text
-                
-            if (attr.tag == 'ldapResponse'):
-                msisdn_info_results[attr.tag] = attr.text
-                msisdn = attr.text
-    
-    # for value , items in msisdn_info_results.items():
-        # print(value + ' = ' + items)
+        if (books.tag == 'accTypeGERAN'):
+            msisdn_info_results[books.tag] = books.text
+            accTypeGERAN = books.text
+
+        if (books.tag == 'accTypeUTRAN'):
+            msisdn_info_results[books.tag] = books.text
+            accTypeUTRAN = books.text
+
+        if (books.tag == 'odboc'):
+            msisdn_info_results[books.tag] = books.text
+            odboc = books.text
+
+        if (books.tag == 'odbic'):
+            msisdn_info_results[books.tag] = books.text
+            odbic = books.text
+
+        if (books.tag == 'odbr'):
+            msisdn_info_results[books.tag] = books.text
+            odbr = books.text
+
+        if (books.tag == 'odboprc'):
+            msisdn_info_results[books.tag] = books.text
+            odboprc = books.text
+
+        if (books.tag == 'odbssm'):
+            msisdn_info_results[books.tag] = books.text
+            odbssm = books.text
+
+        if (books.tag == 'odbgprs'):
+            msisdn_info_results[books.tag] = books.text
+            odbgprs = books.text
+
+        if (books.tag == 'odbsci'):
+            msisdn_info_results[books.tag] = books.text
+            odbsci = books.text
+
+        if (books.tag == 'msisdn'):
+            msisdn_info_results[books.tag] = books.text
+            msisdn = books.text
+
+        if (books.tag == 'isActiveIMSI'):
+            msisdn_info_results[books.tag] = books.text
+            isActiveIMSI = books.text
+
+        if (books.tag == 'actIMSIGprs'):
+            msisdn_info_results[books.tag] = books.text
+            actIMSIGprs = books.text
+
+        if (books.tag == 'obGprs'):
+            msisdn_info_results[books.tag] = books.text
+            obGprs = books.text
+
+        if (books.tag == 'qosProfile'):
+            msisdn_info_results[books.tag] = books.text
+            qosProfile = books.text
+
+        if (books.tag == 'imeisv'):
+            msisdn_info_results[books.tag] = books.text
+            imeisv = books.text
+
+        if (books.tag == 'ldapResponse'):
+            msisdn_info_results[books.tag] = books.text
+            msisdn = books.text
+
+        if (books.tag == 'pdpContext'):
+            for attr in books:
+                if inc == 1:
+                    if (attr.tag == "id"):
+                        print(attr.text)
+                    if (attr.tag == "refPdpContextName"):
+                        msisdn_info_results[attr.tag] = attr.text
+                        refPdpContextName = attr.text
+                if inc == 2:
+                    if (attr.tag == "id"):
+                        print(attr.text)
+                    if (attr.tag == "refPdpContextName"):
+                        print(attr.text)
+                if inc == 3:
+                    if (attr.tag == "id"):
+                        print(attr.text)
+                    if (attr.tag == "refPdpContextName"):
+                        print(attr.text)
+            inc += 1
+
     # ---------------------------------------------------------------------------------------------------------------
     # ----------------- collectes des donnees dans le fichier excel -------------------------------------------------
 
@@ -173,4 +187,4 @@ def put_data_in_dataset(filename, msisdn_info_results):
 if __name__ == "__main__":
     file='soap.xml'
     msisdn_info_results = {}
-    get_in_dataset(file, msisdn_info_results)
+    put_data_in_dataset(file, msisdn_info_results)
