@@ -4,7 +4,11 @@
          <version>HLR_SUBSCRIBER_v45</version>
          <base>
             <objectclass>Subscriber</objectclass>
+<<<<<<< HEAD
             <alias name="msisdn" value="237663744490" />
+=======
+            <alias name="msisdn" value="237668608391" />
+>>>>>>> parent of 9209211... mise a jour pour le traitement pas d'internet
          </base>
       </ns1:searchRequest>
    </ns0:Body>

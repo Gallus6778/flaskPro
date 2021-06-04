@@ -127,7 +127,6 @@ def internet_complaints():
     if msisdnForm.validate_on_submit():
         msisdn_form = msisdnForm.msisdn.data
         msisdnForm.msisdn.data = ''
-        # dict_hlr = "None"
 
         # Recuperation des inforamtions de l'abonne dans la HLR pour Complaints_internet
         # Thread 1
@@ -141,7 +140,7 @@ def internet_complaints():
         # Enrichissement du dataset avec des inforamtions de l'abonne dans la Complaints_internet (ce dernier modifiera le contenu du dictionnaire )
         try:
             # read_xml.put_data_in_dataset(soap_thread(msisdn_form), msisdn_info_results)
-            dict_hlr = read_xml.put_data_in_dataset(soap_xml_filename, msisdn_info_results)
+            read_xml.put_data_in_dataset(soap_xml_filename, msisdn_info_results)
         except :
             messageErreur = 'Error -> file not closed:-) You must first closed the "dataset_internet.xlsx" file !'
             return messageErreur
@@ -152,7 +151,7 @@ def internet_complaints():
         # th2 = threading.Thread(target=sgsn_info_module.main(msisdn_form))
 
         # ============================= Correction du probleme ===========================
-        subscriber_info = Info_hlr(dict_hlr)
+        subscriber_info = Info_hlr()
         info_parameter = subscriber_info.main()
 
     return render_template("complaints_internet/index.html",
