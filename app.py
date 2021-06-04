@@ -145,11 +145,6 @@ def internet_complaints():
             messageErreur = 'Error -> file not closed:-) You must first closed the "dataset_internet.xlsx" file !'
             return messageErreur
 
-        # Recuperation des inforamtions de l'abonne dans la SGSN pour Complaints_internet
-            # zmmi_command = zmmi_zmmo_zmms_class(msisdn)
-            # zmmi_command.main()
-        # th2 = threading.Thread(target=sgsn_info_module.main(msisdn_form))
-
         # ============================= Correction du probleme ===========================
         subscriber_info = Info_hlr()
         info_parameter = subscriber_info.main()

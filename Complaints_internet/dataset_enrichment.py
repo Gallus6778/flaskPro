@@ -177,6 +177,9 @@ def put_data_in_dataset(filename, msisdn_info_results):
 
     sheet.append(new_row)
     wb.save(filename)
+
+    msisdn_info_results = {}
+
     # except :
     #     messageErreur = 'Error -> file not closed:-) You must first closed the "dataset_internet.xlsx" file !'
     #     return messageErreur

@@ -27,6 +27,7 @@ class Soap_class:
 
             with open(payload) as fd:
                 r = requests.post(url, data=fd.read().replace("\n",""), headers=headers)
+                response = 'None'
                 response = r.content
                 file = open('Complaints_internet/soapok.xml', 'w')
                 file.write(response.decode('utf-8'))

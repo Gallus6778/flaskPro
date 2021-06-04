@@ -13,6 +13,7 @@ class Info_hlr:
         worksheet1 = workbook1.add_worksheet()
 
         # Obtenir les valeurs de la derniere ligne du dataset
+        subscriber_info = {}
         subscriber_info = {
             "imsi": sheet["A" + str(sheet.max_row)].value,
             "encKey": sheet["B" + str(sheet.max_row)].value,
@@ -87,6 +88,16 @@ class Info_hlr:
             return self.info_parameter
         elif subscriber_info["ldapResponse"] != 'None':
             self.info_parameter["ldapResponse"] = "Unknow Subscriber"
+
+            #
+            values = ''
+            for keys, value in self.info_parameter.items():
+                values = values + keys + ":" + value + ";"
+
+            # worksheet1.write('Y'+ str(sheet.max_row), values)
+            # workbook1.close()
+            sheet.cell(row=sheet.max_row, column=sheet.max_column, value=values)
+            wb_obj.save(filename=xlsx_file)
             return self.info_parameter
         else:
             pass
