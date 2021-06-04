@@ -183,6 +183,8 @@ def put_data_in_dataset(filename, msisdn_info_results):
     
     # return msisdn_info_results
     # return imsi,encKey,algoId,kdbId,acsub,imsiActive,accTypeGSM,accTypeGERAN,accTypeUTRAN,odboc,odbic,odbr,odboprc,odbssm,odbgprs,odbsci,isActiveIMSI,msisdn,actIMSIGprs,obGprs,qosProfile,refPdpContextName,imeisv,ldapResponse
+
+    return msisdn_info_results
     
 if __name__ == "__main__":
     file='soap.xml'
