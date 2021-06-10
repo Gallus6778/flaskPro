@@ -34,8 +34,8 @@ class ClientThread(threading.Thread):
                 print(type(reponse[0]))
                 transcription = pas_internet.main()
 
-                for keys, values in transcription.items():
-                    message_ack = message_ack + keys + ":" + values +";"
+                # for keys, values in transcription.items():
+                #     message_ack = message_ack + keys + ":" + values +";"
             elif reponse[1] == 'li':
                 message_ack = 'lenteur internet a resoudre tres bientot'
                 # pas_internet = pi(reponse[0])
@@ -53,12 +53,14 @@ class ClientThread(threading.Thread):
                 message_ack = 'probleme non specifie'
             # ===========================================================
 
-            message_emis = message_ack.encode("utf8")
+            # message_emis = message_ack.encode("utf8")
+            message_emis = transcription.encode("utf8")
+
             self.csocket.send(message_emis)
         print ("Client at ", clientAddress , " disconnected...")
 
 # ==================changer l'adresse ip de la machine dans le reseau=========================================
-LOCALHOST = "192.168.1.5"
+LOCALHOST = "192.168.1.3"
 PORT = 12101
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)

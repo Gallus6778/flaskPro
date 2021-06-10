@@ -71,8 +71,11 @@ class Info_hlr:
                     self.info_parameter["qosProfile"] = "QoS is not defined"
                 elif subscriber_info['qosProfile'] not in ['QoS-R7', 'GOLD', 'SILVER', 'COPPER']:
                     self.info_parameter["qosProfile"] = "QoS " + subscriber_info['qosProfile'] + " is not good, Change to QoS-R7"
+            if subscriber_info['actIMSIGprs'] == "false":
+                self.info_parameter["actIMSIGprs"] = "actIMSIGprs is " + subscriber_info['actIMSIGprs'] + ". Restart phone"
+
             #
-            if (subscriber_info['qosProfile'] in ['QoS-R7', 'GOLD', 'SILVER', 'COPPER']) and (subscriber_info["refPdpContextName"] in list_apn) and (subscriber_info["odbgprs"] == "0"):
+            if (subscriber_info['qosProfile'] in ['QoS-R7', 'GOLD', 'SILVER', 'COPPER']) and (subscriber_info["refPdpContextName"] in list_apn) and (subscriber_info["odbgprs"] == "0") and (subscriber_info['actIMSIGprs'] == "true"):
                 self.info_parameter["result"] = "Everything is ok"
             # print(subscriber_info)
 

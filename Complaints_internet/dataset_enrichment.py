@@ -127,25 +127,31 @@ def put_data_in_dataset(filename, msisdn_info_results):
         if (books.tag == 'ldapResponse'):
             msisdn_info_results[books.tag] = books.text
             msisdn = books.text
-
+        ident = ''
         if (books.tag == 'pdpContext'):
             for attr in books:
                 if inc == 1:
                     if (attr.tag == "id"):
-                        print(attr.text)
+                        ident = attr.text
                     if (attr.tag == "refPdpContextName"):
-                        msisdn_info_results[attr.tag] = attr.text
                         refPdpContextName = attr.text
+                        if ident == "1" or ident == "5":
+                            msisdn_info_results[attr.tag] = refPdpContextName
+
                 if inc == 2:
                     if (attr.tag == "id"):
-                        print(attr.text)
+                        ident = attr.text
                     if (attr.tag == "refPdpContextName"):
-                        print(attr.text)
+                        refPdpContextName = attr.text
+                        if ident == "1" or ident == "5":
+                            msisdn_info_results[attr.tag] = refPdpContextName
                 if inc == 3:
                     if (attr.tag == "id"):
-                        print(attr.text)
+                        ident = attr.text
                     if (attr.tag == "refPdpContextName"):
-                        print(attr.text)
+                        refPdpContextName = attr.text
+                        if ident == "1" or ident == "5":
+                            msisdn_info_results[attr.tag] = refPdpContextName
             inc += 1
 
     # ---------------------------------------------------------------------------------------------------------------

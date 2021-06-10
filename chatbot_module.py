@@ -82,4 +82,10 @@ class Pas_internet:
         # ============================= Correction du probleme ===========================
         subscriber_info = Info_hlr()
         info_parameter = subscriber_info.main()
-        return info_parameter
+
+        message_ack = ''
+        for keys, values in info_parameter.items():
+            message_ack = message_ack + keys + ":" + values + ";"
+
+        # return info_parameter
+        return message_ack

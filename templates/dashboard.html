@@ -1,5 +1,38 @@
-{% extends 'layouts/app.html' %}
+{% extends 'layouts/template.html' %}
 
-{% block start_content %}
-<h1>Dashboard</h1>
+{% block style %}
+<style>
+    .dtHorizontalExampleWrapper {
+        max-width: 600px;
+        margin: 0 auto;
+        overflow: auto;
+        }
+    #dtHorizontalExample th, td, #dtHorizontalExample2 th, dtHorizontalExample3 th {
+        white-space: nowrap;
+        }
+
+    table.dataTable thead .sorting:after,
+    table.dataTable thead .sorting:before,
+    table.dataTable thead .sorting_asc:after,
+    table.dataTable thead .sorting_asc:before,
+    table.dataTable thead .sorting_asc_disabled:after,
+    table.dataTable thead .sorting_asc_disabled:before,
+    table.dataTable thead .sorting_desc:after,
+    table.dataTable thead .sorting_desc:before,
+    table.dataTable thead .sorting_desc_disabled:after,
+    table.dataTable thead .sorting_desc_disabled:before {
+        bottom: .5em;
+        }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="div col-12">
+            <center><h1>Welcome to RobIC plateform</h1></center>
+
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -1,3 +1,4 @@
+# import flask
 from flask import Flask, render_template, request, redirect, url_for, session, escape
 # from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
@@ -5,6 +6,8 @@ from wtforms import StringField, SubmitField, PasswordField, BooleanField
 from wtforms.validators import InputRequired,Email,Length, DataRequired
 import threading
 from flask_mongoengine import MongoEngine
+from flask_pymongo import PyMongo
+
 
 # Importation des modules pour resolutions des plaintes d'internet
 # import xml.etree.cElementTree as ET
@@ -22,10 +25,30 @@ app = Flask(__name__)
 # Bootstrap(app)
 
 app.config['MONGODB_SETTINGS'] = {
-    "db": "flaskPro",
+    "db": "robic_db",
 }
-db = MongoEngine(app)
+# db = MongoEngine(app)
 app.config['SECRET_KEY'] = "my secret key"
+
+mongodb_client = PyMongo(app, uri="mongodb://localhost:27017/robic_db")
+db = mongodb_client.db
+
+# @app.route('/')
+@app.route('/', methods=['GET'])
+def index():
+
+    # db.users.insert_one({'name': "Gallus", 'email': "noahgallusfgi@gmail.com"})
+
+    # try:
+    #     file = open('sesion.txt', 'r')
+    #     session = file.readline()
+    #     file.close()
+    #     email = ''
+    #     if 'email' in session:
+    #         email = session
+    #     return 'Logged in as ' + email + '<br>' + "<b><a href = '/logout'>click here to log out</a></b>" + flask.jsonify([todo for todo in todos])
+    # except:
+    return render_template('index.html')
 
 #---------------------------------------------- login form ------------------------------------------------------------
 class LoginForm(FlaskForm):
@@ -33,18 +56,21 @@ class LoginForm(FlaskForm):
     password = SubmitField("password")
     remember = BooleanField("remember me")
     submit = SubmitField("Submit")
+
 #---------------------------------------------- login page's ------------------------------------------------------------
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     # user = LoginForm
     # return render_template('users/register.html', user = user)
+
     if request.method == 'POST':
         # session['email'] = request.form['email']
 
-        file = open('session.txt', 'w')
-        file.write("email = " + request.form['email'])
-        file.close()
-        return redirect(url_for('index'))
+        # file = open('session.txt', 'w')
+        # file.write("email = " + request.form['email'])
+        # file.close()
+        # return redirect(url_for('index'))
+        return request.form['email']
 
     return render_template('users/register.html')
 
@@ -52,25 +78,6 @@ def login():
 def logout():
     user = LoginForm()
     return render_template('users/signup.html', user = user)
-
-# @app.route('/')
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    # if request.method == 'POST':
-    #     email = request.form['email']
-    #     password = request.form['password']
-    #     return redirect(url_for('dashboard'))
-    # return render_template('users/index.html')
-    try:
-        file = open('sesion.txt', 'r')
-        session = file.readline()
-        file.close()
-        if 'email' in session:
-            email = session
-            return 'Logged in as ' + email + '<br>' + "<b><a href = '/logout'>click here to log out</a></b>"
-    except:
-        return "You are not logged in <br><a href = '/login'>" + "click here to log in</a>"
-
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
@@ -80,15 +87,6 @@ def dashboard():
 class Msisdn_form_class(FlaskForm):
     msisdn = StringField("Enter the msisdn : ")
     submit = SubmitField("Submit")
-
-# soap_xml_filename = 'None'S
-# def soap_thread(msisdn_form):
-#     msisdn = Soap_class(msisdn=msisdn_form)
-#     soap_xml_filename = msisdn.main()
-#     return soap_xml_filename
-
-
-
 
 @app.route('/internet_complaints', methods=['GET', 'POST'])
 # @app.route('/', methods=['GET', 'POST'])
