@@ -72,7 +72,8 @@ def login():
         # return redirect(url_for('index'))
         return request.form['email']
 
-    return render_template('users/register.html')
+    # return render_template('users/register.html')
+    return render_template('users/login.html')
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
