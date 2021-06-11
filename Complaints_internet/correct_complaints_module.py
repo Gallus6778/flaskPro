@@ -2,7 +2,7 @@ import openpyxl
 import xlsxwriter
 
 class Info_hlr:
-    def __init__(self):
+    def __init__(self, dict_hlr):
         self.info_parameter = {}
     def main(self):
         xlsx_file = "Complaints_internet/dataset_internet.xlsx"
@@ -40,7 +40,8 @@ class Info_hlr:
             "imeisv": sheet["W" + str(sheet.max_row)].value,
             "ldapResponse": sheet["X" + str(sheet.max_row)].value,
             "Targets": sheet["Y" + str(sheet.max_row)].value}
-
+        #
+        # subscriber_info = self.info_parameter
         list_apn = ["n-internet","n-est","n-cen","n-connect","n-ada","n-nor","n-sud","n-out","n-nwt","n-ext","n-lit","n-swt"]
 
         if subscriber_info["ldapResponse"] == 'None':
@@ -89,7 +90,7 @@ class Info_hlr:
             sheet.cell(row=sheet.max_row, column=sheet.max_column, value=values)
             wb_obj.save(filename=xlsx_file)
             return self.info_parameter
-        elif subscriber_info["ldapResponse"] != 'None':
+        elif subscriber_info["ldapResponse"] != 'None' and subscriber_info["msisdn"] == "None":
             self.info_parameter["ldapResponse"] = "Unknow Subscriber"
 
             #
