@@ -15,7 +15,7 @@ Step:
 NB: The venv repository must be created
 
 3 - Active the virtual environnement
- robic_dev > source venv/bin/activate
+ robic_dev > source venv/Scripts/activate
  (venv) robic_dev >
 
 NB: in command prompt, you must see something like this: (venv) robic_dev>

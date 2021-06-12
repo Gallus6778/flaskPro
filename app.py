@@ -1,5 +1,6 @@
 # import flask
-from flask import Flask, render_template, request, redirect, url_for, session, escape
+import uuid
+from flask import Flask, render_template, request, redirect, url_for, session, escape, g
 # from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, BooleanField
@@ -7,6 +8,9 @@ from wtforms.validators import InputRequired,Email,Length, DataRequired
 import threading
 from flask_mongoengine import MongoEngine
 from flask_pymongo import PyMongo
+
+from flask_login import LoginManager, login_user, login_required, logout_user
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 # Importation des modules pour resolutions des plaintes d'internet
@@ -27,15 +31,64 @@ app = Flask(__name__)
 app.config['MONGODB_SETTINGS'] = {
     "db": "robic_db",
 }
-# db = MongoEngine(app)
+db = MongoEngine(app)
 app.config['SECRET_KEY'] = "my secret key"
+# app.config['MONGO_DBNAME'] = 'robic_db'
+app.config['MONGO_URI'] = 'mongodb://localhost:27017/robic_db'
+# mongodb_client = PyMongo(app, uri="mongodb://localhost:27017/robic_db")
+app.config['USE_SESSION_FOR_NEXT']=True
+# db = mongodb_client.db
 
-mongodb_client = PyMongo(app, uri="mongodb://localhost:27017/robic_db")
-db = mongodb_client.db
+
+app.config["MONGO_URI"] = "mongodb://localhost:27017/robic_db"
+mongo = PyMongo(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view="/"
+login_manager.login_message = "You may to be identified"
+
+
+@app.before_request
+def before_request():
+    if 'user_id' in session:
+        users=mongo.db.users.find()
+        for user in users:
+            if user['id'] == session['user_id']:
+                User = user
+        g.User = User
+class User:
+    def __init__(self, username):
+        self.username = username
+
+    @staticmethod
+    def is_authenticated():
+        return True
+
+    @staticmethod
+    def is_active():
+        return True
+
+    @staticmethod
+    def is_anonimous():
+        return False
+
+    def get_id(self):
+        return self.username
+
+    @staticmethod
+    def check_password(password_hash, password):
+        return check_password_hash(password_hash, password)
+
+    @login_manager.user_loader
+    def load_user(username):
+        user = mongo.db.users.find_one({"username": username})
+        if not user:
+            return None
+        return User(username=user['username'])
 
 # @app.route('/')
-@app.route('/', methods=['GET'])
-def index():
+# @app.route('/', methods=['GET'])
+# def index():
 
     # db.users.insert_one({'name': "Gallus", 'email': "noahgallusfgi@gmail.com"})
 
@@ -48,7 +101,7 @@ def index():
     #         email = session
     #     return 'Logged in as ' + email + '<br>' + "<b><a href = '/logout'>click here to log out</a></b>" + flask.jsonify([todo for todo in todos])
     # except:
-    return render_template('index.html')
+    # return render_template('index.html')
 
 #---------------------------------------------- login form ------------------------------------------------------------
 class LoginForm(FlaskForm):
@@ -58,29 +111,46 @@ class LoginForm(FlaskForm):
     submit = SubmitField("Submit")
 
 #---------------------------------------------- login page's ------------------------------------------------------------
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    # user = LoginForm
-    # return render_template('users/register.html', user = user)
-
-    if request.method == 'POST':
-        # session['email'] = request.form['email']
-
-        # file = open('session.txt', 'w')
-        # file.write("email = " + request.form['email'])
-        # file.close()
-        # return redirect(url_for('index'))
-        return request.form['email']
-
-    # return render_template('users/register.html')
+@app.route('/', methods=['GET', 'POST'])
+def home_page():
+    session['next']=request.args.get('next')
     return render_template('users/login.html')
 
+@app.route('/login', methods=['POST'])
+def login():
+    session.pop('user_id', None)
+    user = mongo.db.users.find_one({"username": request.form["username"]})
+    if user and User.check_password(user['password'], request.form['password']):
+        session['user_id'] = user['id']
+        user_obj = User(username=user['username'])
+        login_user(user_obj)
+        return redirect('/dashboard')
+    else:
+        error = 'login or password is incorrect !'
+        return render_template('users/login.html', error=error)
+
+@app.route('/sign_in', methods=['GET', 'POST'])
+def sign_in():
+    if(request.method == 'POST'):
+        username=request.form['username']
+        # name=request.form['name']
+        password=request.form['password']
+
+        test=uuid.uuid4().hex
+
+        user={"id":test, "username":username, "password":generate_password_hash(password)}# "login":login,
+        mongo.db.users.insert_one(user)
+        return redirect("/dashboard")
+    return render_template('users/sign_in.html')
+
 @app.route('/logout', methods=['GET', 'POST'])
+@login_required
 def logout():
-    user = LoginForm()
-    return render_template('users/signup.html', user = user)
+    logout_user()
+    return redirect('/')
 
 @app.route('/dashboard', methods=['GET', 'POST'])
+@login_required
 def dashboard():
     return render_template('dashboard.html')
 #---------------------------------------------- Plaintes Internet ------------------------------------------------------------
